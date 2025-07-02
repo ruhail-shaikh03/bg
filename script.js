@@ -69,6 +69,18 @@ function setupEventListeners() {
     // Navigation buttons
     document.getElementById('viewStatsBtn').addEventListener('click', () => showScreen('statsSection'));
     document.getElementById('backToGameBtn').addEventListener('click', () => showScreen('gameSection'));
+    
+    // Back buttons
+    document.getElementById('backToPlayerCountBtn').addEventListener('click', () => {
+        gameState.playerCount = 0;
+        showScreen('playerCountSection');
+    });
+    
+    document.getElementById('changePlayersBtn').addEventListener('click', () => {
+        if (confirm('Are you sure you want to change players? Current game will continue with existing stats.')) {
+            showScreen('playerCountSection');
+        }
+    });
 
     // Reset stats button
     document.getElementById('resetStatsBtn').addEventListener('click', handleResetStats);
