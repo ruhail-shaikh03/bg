@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a1a1a">
+    <title>Badshah Gashti Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="vintage-overlay"></div>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="neon-sign">
+                <h1 class="app-title">
+                    <span class="crown-icon">♔</span> Badshah Gashti <span class="heart-icon">♥</span>
+                </h1>
+                <p class="app-subtitle">Underground Card Tracker</p>
+            </div>
+            <div class="smoke-effect"></div>
+        </header>
+
+        <!-- Player Count Selection -->
+        <section id="playerCountSection" class="screen active">
+            <div class="card-container vintage-card glowing-card">
+                <div class="card-inner">
+                    <h2 class="section-title neon-text">How many players?</h2>
+                    <div class="player-count-grid">
+                        <button class="player-count-btn pulse-hover" data-count="3">
+                            <span class="count-number">3</span>
+                            <span class="count-label">Players</span>
+                        </button>
+                        <button class="player-count-btn pulse-hover" data-count="4">
+                            <span class="count-number">4</span>
+                            <span class="count-label">Players</span>
+                        </button>
+                        <button class="player-count-btn pulse-hover" data-count="5">
+                            <span class="count-number">5</span>
+                            <span class="count-label">Players</span>
+                        </button>
+                        <button class="player-count-btn pulse-hover" data-count="6">
+                            <span class="count-number">6</span>
+                            <span class="count-label">Players</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Player Names Input -->
+        <section id="playerNamesSection" class="screen">
+            <div class="card-container vintage-card glowing-card">
+                <button id="backToPlayerCountBtn" class="back-btn">
+                    <span class="back-icon">←</span> Back
+                </button>
+                <div class="card-inner">
+                    <h2 class="section-title neon-text">Enter Player Names</h2>
+                    <div id="playerNameInputs" class="name-inputs-container">
+                        <!-- Dynamically generated inputs -->
+                    </div>
+                    <button id="startGameBtn" class="primary-btn neon-btn glow-pulse">
+                        <span class="dice-icon">⚀</span> Deal Players <span class="dice-icon">⚅</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Game Round -->
+        <section id="gameSection" class="screen">
+            <div class="game-container">
+                <div class="round-header glowing-card">
+                    <button id="changePlayersBtn" class="back-btn">
+                        <span class="back-icon">←</span> Change Players
+                    </button>
+                    <h2 class="section-title neon-text">Assign Titles</h2>
+                    <button id="viewStatsBtn" class="secondary-btn pulse-btn">
+                        <span class="stats-icon">📊</span> View Stats
+                    </button>
+                </div>
+                <form id="roundForm" class="round-form">
+                    <div id="titleAssignments" class="title-assignments">
+                        <!-- Dynamically generated title assignments -->
+                    </div>
+                    <button type="submit" class="primary-btn fixed-bottom underground-btn glow-pulse">
+                        <span class="smoke-icon">✦</span> Lock Titles <span class="smoke-icon">✦</span>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Stats Display -->
+        <section id="statsSection" class="screen">
+            <div class="stats-container-wrapper">
+                <div class="stats-header glowing-card">
+                    <h2 class="section-title neon-text">Player Stats</h2>
+                    <button id="backToGameBtn" class="secondary-btn pulse-btn">
+                        <span class="back-icon">←</span> Back to Game
+                    </button>
+                </div>
+                <div id="statsDisplay" class="stats-container">
+                    <!-- Dynamically generated stats -->
+                </div>
+                <div class="stats-actions">
+                    <button id="resetStatsBtn" class="danger-btn shake-hover">
+                        <span class="skull-icon">💀</span> Reset All Stats <span class="skull-icon">💀</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
