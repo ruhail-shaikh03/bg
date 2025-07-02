@@ -73,6 +73,15 @@ function setupEventListeners() {
     // Back buttons
     document.getElementById('backToPlayerCountBtn').addEventListener('click', () => {
         gameState.playerCount = 0;
+        // Clean up temp photos
+        if (gameState.playerPhotos) {
+            Object.keys(gameState.playerPhotos).forEach(key => {
+                if (key.startsWith('temp_')) {
+                    delete gameState.playerPhotos[key];
+                }
+            });
+        }
+        saveGameState();
         showScreen('playerCountSection');
     });
     
@@ -120,8 +129,13 @@ function generateNameInputs(count) {
         container.appendChild(inputGroup);
         
         // Load existing photo if available
-        if (gameState.playerPhotos && gameState.playerPhotos[i]) {
-            displayPhoto(i, gameState.playerPhotos[i]);
+        if (gameState.playerPhotos) {
+            // Check for temp photo first, then by name
+            if (gameState.playerPhotos[`temp_${i}`]) {
+                displayPhoto(i, gameState.playerPhotos[`temp_${i}`]);
+            } else if (gameState.players && gameState.players[i] && gameState.playerPhotos[gameState.players[i]]) {
+                displayPhoto(i, gameState.playerPhotos[gameState.players[i]]);
+            }
         }
     }
 }
@@ -138,13 +152,17 @@ function handlePhotoUpload(playerIndex) {
             if (!gameState.playerPhotos) {
                 gameState.playerPhotos = {};
             }
-            gameState.playerPhotos[playerIndex] = photoData;
+            // Store temporarily by index for now
+            gameState.playerPhotos[`temp_${playerIndex}`] = photoData;
             displayPhoto(playerIndex, photoData);
             saveGameState();
         };
         reader.readAsDataURL(file);
     }
 }
+
+// Make handlePhotoUpload available globally
+window.handlePhotoUpload = handlePhotoUpload;
 
 // Display uploaded photo
 function displayPhoto(playerIndex, photoData) {
@@ -160,17 +178,30 @@ function displayPhoto(playerIndex, photoData) {
 function handleStartGame() {
     const inputs = document.querySelectorAll('.name-input');
     const players = [];
+    const newPlayerPhotos = {};
     
     // Validate all names are entered
-    for (let input of inputs) {
+    for (let i = 0; i < inputs.length; i++) {
+        const input = inputs[i];
         if (!input.value.trim()) {
             alert('Please enter all player names');
             return;
         }
         players.push(input.value.trim());
+        
+        // Preserve photo data for new player arrangement
+        if (gameState.playerPhotos) {
+            // Check temp photos first
+            if (gameState.playerPhotos[`temp_${i}`]) {
+                newPlayerPhotos[input.value.trim()] = gameState.playerPhotos[`temp_${i}`];
+            } else if (gameState.playerPhotos[i]) {
+                newPlayerPhotos[input.value.trim()] = gameState.playerPhotos[i];
+            }
+        }
     }
     
     gameState.players = players;
+    gameState.playerPhotos = newPlayerPhotos;
     
     // Initialize stats if not exists
     players.forEach(player => {
@@ -199,8 +230,8 @@ function generateRoundForm() {
         assignment.className = 'title-assignment';
         assignment.id = `assignment-${index}`;
         
-        const photoHtml = gameState.playerPhotos && gameState.playerPhotos[index] 
-            ? `<img src="${gameState.playerPhotos[index]}" class="player-photo-small" alt="${player}">`
+        const photoHtml = gameState.playerPhotos && gameState.playerPhotos[player] 
+            ? `<img src="${gameState.playerPhotos[player]}" class="player-photo-small" alt="${player}">`
             : '';
         
         assignment.innerHTML = `
@@ -237,6 +268,9 @@ function updateTitleStyling(playerIndex) {
         assignment.classList.add(titleThemes[selectedTitle].class);
     }
 }
+
+// Make updateTitleStyling available globally
+window.updateTitleStyling = updateTitleStyling;
 
 // Handle round submission
 function handleRoundSubmit(e) {
@@ -347,13 +381,13 @@ function generateStatsDisplay() {
     const container = document.getElementById('statsDisplay');
     container.innerHTML = '';
     
-    gameState.players.forEach((player, playerIndex) => {
+    gameState.players.forEach((player) => {
         const statsCard = document.createElement('div');
         statsCard.className = 'player-stats-card';
         
         const totalRounds = Object.values(gameState.stats[player]).reduce((a, b) => a + b, 0);
-        const photoHtml = gameState.playerPhotos && gameState.playerPhotos[playerIndex]
-            ? `<img src="${gameState.playerPhotos[playerIndex]}" class="stats-photo" alt="${player}">`
+        const photoHtml = gameState.playerPhotos && gameState.playerPhotos[player]
+            ? `<img src="${gameState.playerPhotos[player]}" class="stats-photo" alt="${player}">`
             : '';
         
         // Find most common title
